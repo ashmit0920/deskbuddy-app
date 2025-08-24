@@ -1,0 +1,41 @@
+{
+  "name": "deskbuddy-app",
+  "version": "1.0.0",
+  "main": "dist/main/main.js",
+  "scripts": {
+    "dev:react": "vite --config vite.config.ts",
+    "dev:electron": "tsc -p tsconfig.json --outDir dist && electron .",
+    "dev": "cross-env NODE_ENV=development concurrently \"npm run dev:react\" \"npm run dev:electron\"",
+    "start": "electron .",
+    "build": "tsc && vite build",
+    "dist": "npm run build && electron-builder"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/electron": "^1.4.38",
+    "@types/node": "^24.3.0",
+    "@types/react": "^19.1.11",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^4.7.0",
+    "autoprefixer": "^10.4.21",
+    "concurrently": "^9.2.0",
+    "cross-env": "^10.0.0",
+    "electron": "^37.3.1",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^4.1.12",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2",
+    "vite": "^5.4.19"
+  },
+  "dependencies": {
+    "@tailwindcss/postcss": "^4.1.12",
+    "framer-motion": "^12.23.12",
+    "lucide-react": "^0.541.0",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "recharts": "^3.1.2"
+  }
+}
