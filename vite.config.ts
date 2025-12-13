@@ -4,13 +4,14 @@ import path from "path";
 
 export default defineConfig({
     plugins: [react()],
-    root: path.resolve(__dirname, "src/renderer"), // 👈 points to your React app folder
+    root: path.resolve(__dirname, "src/renderer"),
+    envDir: path.resolve(__dirname), // Point to project root where .env is
     base: "./",
     build: {
         outDir: path.resolve(__dirname, "dist/renderer"),
         emptyOutDir: true,
     },
     server: {
-        port: 5173, // default, can change
+        port: 5173,
     },
 });

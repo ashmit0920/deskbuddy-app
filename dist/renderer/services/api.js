@@ -1,6 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.api = void 0;
 const BASE_URL = "http://localhost:8000/api";
 async function fetchJson(endpoint) {
     const response = await fetch(`${BASE_URL}${endpoint}`);
@@ -9,7 +6,7 @@ async function fetchJson(endpoint) {
     }
     return response.json();
 }
-exports.api = {
+export const api = {
     activity: {
         getKeystrokes: (startDate, endDate) => {
             const params = new URLSearchParams();

@@ -1,30 +1,61 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = AiRecommendations;
-const jsx_runtime_1 = require("react/jsx-runtime");
-const react_1 = require("react");
-const lucide_react_1 = require("lucide-react");
-const framer_motion_1 = require("framer-motion");
-const DUMMY_RECS = [
-    "Try the Pomodoro technique for 25/5 cycles.",
-    "Disable social notifications during focus sessions.",
-    "Short breathing exercises before deep work increases focus.",
-];
-function AiRecommendations() {
-    const [messages, setMessages] = (0, react_1.useState)([
-        { id: 1, from: "ai", text: "Hi! I'm DeskBuddy AI. Ask me about today's session or request tips." },
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useState, useEffect, useRef } from "react";
+import { Plane, Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
+import { api } from "../services/api";
+import { gemini } from "../services/gemini";
+export default function AiRecommendations() {
+    const [messages, setMessages] = useState([
+        { id: 1, from: "ai", text: "Hi! I'm DeskBuddy AI. I've analyzed your session data. How can I help you improve your productivity today?" },
     ]);
-    const [text, setText] = (0, react_1.useState)("");
-    function send() {
-        if (!text.trim())
+    const [text, setText] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [stats, setStats] = useState(null);
+    const scrollRef = useRef(null);
+    useEffect(() => {
+        // Fetch stats for context
+        api.analytics.getProductivityStats().then(setStats).catch(console.error);
+    }, []);
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+    }, [messages]);
+    async function send() {
+        if (!text.trim() || loading)
             return;
-        const userMsg = { id: Date.now(), from: "user", text: text.trim() };
+        const userText = text.trim();
+        const userMsg = { id: Date.now(), from: "user", text: userText };
         setMessages((s) => [...s, userMsg]);
         setText("");
-        // dummy AI reply
-        setTimeout(() => {
-            setMessages((s) => [...s, { id: Date.now() + 1, from: "ai", text: DUMMY_RECS[Math.floor(Math.random() * DUMMY_RECS.length)] }]);
-        }, 600 + Math.random() * 800);
+        setLoading(true);
+        try {
+            // Prepare history for Gemini
+            const history = messages.map(m => ({
+                role: m.from === "user" ? "user" : "model",
+                parts: [{ text: m.text }]
+            }));
+            history.push({ role: "user", parts: [{ text: userText }] });
+            // Prepare context
+            const context = stats
+                ? `Current Session Stats:
+                   - Total Keystrokes: ${stats.total_keystrokes}
+                   - Typing Speed: ${stats.avg_typing_speed.toFixed(1)} WPM
+                   - Active Periods: ${stats.active_periods}
+                   - Avg Attention: ${(stats.avg_attention * 100).toFixed(1)}%
+                   - Blink Rate: ${stats.avg_blink_rate.toFixed(1)}/min`
+                : "No session data available yet.";
+            const replyText = await gemini.chat(history, context);
+            setMessages((s) => [...s, { id: Date.now() + 1, from: "ai", text: replyText }]);
+        }
+        catch (error) {
+            setMessages((s) => [...s, { id: Date.now() + 1, from: "ai", text: "Sorry, I encountered an error. Please check your API key." }]);
+        }
+        finally {
+            setLoading(false);
+        }
     }
-    return ((0, jsx_runtime_1.jsxs)("div", { className: "space-y-4", children: [(0, jsx_runtime_1.jsxs)("header", { className: "flex items-center justify-between", children: [(0, jsx_runtime_1.jsx)("h3", { className: "text-2xl font-semibold", children: "AI Recommendations" }), (0, jsx_runtime_1.jsx)("div", { className: "text-slate-400", children: "Try asking: \"How can I focus better today?\"" })] }), (0, jsx_runtime_1.jsxs)("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-6", children: [(0, jsx_runtime_1.jsxs)("div", { className: "lg:col-span-2 bg-slate-800/60 border border-slate-700/40 rounded-2xl p-4 flex flex-col h-96", children: [(0, jsx_runtime_1.jsx)("div", { className: "flex-1 overflow-auto space-y-3 px-1 pb-2", children: messages.map((m) => ((0, jsx_runtime_1.jsx)(framer_motion_1.motion.div, { initial: { opacity: 0, y: 6 }, animate: { opacity: 1, y: 0 }, className: `flex ${m.from === "user" ? "justify-end" : "justify-start"}`, children: (0, jsx_runtime_1.jsx)("div", { className: `max-w-[70%] p-3 rounded-lg ${m.from === "user" ? "bg-indigo-500/80 text-white" : "bg-slate-700/60 text-slate-200"}`, children: m.text }) }, m.id))) }), (0, jsx_runtime_1.jsx)("div", { className: "mt-2 border-t border-slate-700/30 pt-3", children: (0, jsx_runtime_1.jsxs)("div", { className: "flex gap-2", children: [(0, jsx_runtime_1.jsx)("input", { value: text, onChange: (e) => setText(e.target.value), onKeyDown: (e) => e.key === "Enter" && send(), placeholder: "Ask DeskBuddy...", className: "flex-1 rounded-lg bg-slate-800/50 border border-slate-700/40 px-4 py-2 focus:outline-none" }), (0, jsx_runtime_1.jsxs)("button", { onClick: send, className: "rounded-lg bg-indigo-500 px-4 py-2 flex items-center gap-2", children: [(0, jsx_runtime_1.jsx)(lucide_react_1.Plane, { className: "w-4 h-4" }), " Send"] })] }) })] }), (0, jsx_runtime_1.jsxs)("aside", { className: "space-y-3", children: [(0, jsx_runtime_1.jsxs)("div", { className: "bg-slate-800/60 border border-slate-700/40 rounded-2xl p-4", children: [(0, jsx_runtime_1.jsx)("h4", { className: "font-medium", children: "Quick Tips" }), (0, jsx_runtime_1.jsxs)("ul", { className: "mt-2 text-sm text-slate-300 space-y-2", children: [(0, jsx_runtime_1.jsx)("li", { children: "\u2022 Block distracting sites for 45 mins" }), (0, jsx_runtime_1.jsx)("li", { children: "\u2022 Use noise-cancelling or ambient sound" }), (0, jsx_runtime_1.jsx)("li", { children: "\u2022 Short walks between sessions" })] })] }), (0, jsx_runtime_1.jsxs)("div", { className: "bg-slate-800/60 border border-slate-700/40 rounded-2xl p-4", children: [(0, jsx_runtime_1.jsx)("h4", { className: "font-medium", children: "Session Summary" }), (0, jsx_runtime_1.jsx)("p", { className: "text-sm text-slate-300 mt-2", children: "Typing: 7.5k keys \u2022 Active: 135m \u2022 Focus dips: 6" })] })] })] })] }));
+    return (_jsxs("div", { className: "space-y-4", children: [_jsx("header", { className: "flex items-center justify-between", children: _jsxs("div", { children: [_jsxs("h3", { className: "text-2xl font-semibold flex items-center gap-2", children: [_jsx(Sparkles, { className: "w-6 h-6 text-indigo-400" }), "DeskBuddy AI"] }), _jsx("div", { className: "text-slate-400 text-sm mt-1", children: "Your personal productivity & wellbeing assistant" })] }) }), _jsxs("div", { className: "grid grid-cols-1 lg:grid-cols-3 gap-6", children: [_jsxs("div", { className: "lg:col-span-2 bg-slate-800/60 border border-slate-700/40 rounded-2xl p-4 flex flex-col h-[600px]", children: [_jsxs("div", { ref: scrollRef, className: "flex-1 overflow-auto space-y-4 px-2 pb-4", children: [messages.map((m) => (_jsx(motion.div, { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 }, className: `flex ${m.from === "user" ? "justify-end" : "justify-start"}`, children: _jsx("div", { className: `max-w-[80%] p-4 rounded-2xl ${m.from === "user"
+                                                ? "bg-indigo-600 text-white rounded-br-none"
+                                                : "bg-slate-700/80 text-slate-100 rounded-bl-none"}`, children: _jsx("div", { className: "text-sm leading-relaxed whitespace-pre-wrap", children: m.text }) }) }, m.id))), loading && (_jsx(motion.div, { initial: { opacity: 0 }, animate: { opacity: 1 }, className: "flex justify-start", children: _jsxs("div", { className: "bg-slate-700/80 p-4 rounded-2xl rounded-bl-none flex gap-2", children: [_jsx("span", { className: "w-2 h-2 bg-slate-400 rounded-full animate-bounce" }), _jsx("span", { className: "w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]" }), _jsx("span", { className: "w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]" })] }) }))] }), _jsx("div", { className: "mt-4 pt-4 border-t border-slate-700/30", children: _jsxs("div", { className: "flex gap-3", children: [_jsx("input", { value: text, onChange: (e) => setText(e.target.value), onKeyDown: (e) => e.key === "Enter" && send(), placeholder: "Ask about your productivity, stress, or request tips...", disabled: loading, className: "flex-1 rounded-xl bg-slate-900/50 border border-slate-700 px-4 py-3 focus:outline-none focus:border-indigo-500 transition-colors disabled:opacity-50" }), _jsx("button", { onClick: send, disabled: loading || !text.trim(), className: "rounded-xl bg-indigo-600 px-5 py-3 flex items-center gap-2 font-medium hover:bg-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed", children: _jsx(Plane, { className: "w-5 h-5" }) })] }) })] }), _jsxs("aside", { className: "space-y-4", children: [_jsxs("div", { className: "bg-slate-800/60 border border-slate-700/40 rounded-2xl p-5", children: [_jsx("h4", { className: "font-medium text-indigo-300 mb-4", children: "Quick Actions" }), _jsx("div", { className: "space-y-2", children: ["Analyze my focus session", "Give me a destress tip", "How is my typing rhythm?", "Suggest a break schedule"].map(suggestion => (_jsx("button", { onClick: () => { setText(suggestion); }, className: "w-full text-left p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 text-sm text-slate-300 transition-colors border border-slate-700/30 hover:border-indigo-500/30", children: suggestion }, suggestion))) })] }), _jsxs("div", { className: "bg-slate-800/60 border border-slate-700/40 rounded-2xl p-5", children: [_jsx("h4", { className: "font-medium text-indigo-300 mb-3", children: "Live Context" }), stats ? (_jsxs("div", { className: "space-y-3 text-sm", children: [_jsxs("div", { className: "flex justify-between pb-2 border-b border-slate-700/30", children: [_jsx("span", { className: "text-slate-400", children: "Typing Speed" }), _jsxs("span", { className: "font-mono text-slate-200", children: [stats.avg_typing_speed.toFixed(1), " WPM"] })] }), _jsxs("div", { className: "flex justify-between pb-2 border-b border-slate-700/30", children: [_jsx("span", { className: "text-slate-400", children: "Total Keystrokes" }), _jsx("span", { className: "font-mono text-slate-200", children: stats.total_keystrokes.toLocaleString() })] }), _jsxs("div", { className: "flex justify-between pb-2 border-b border-slate-700/30", children: [_jsx("span", { className: "text-slate-400", children: "Attention" }), _jsxs("span", { className: "font-mono text-slate-200", children: [(stats.avg_attention * 100).toFixed(0), "%"] })] }), _jsxs("div", { className: "flex justify-between", children: [_jsx("span", { className: "text-slate-400", children: "Sessions" }), _jsx("span", { className: "font-mono text-slate-200", children: stats.active_periods })] })] })) : (_jsx("div", { className: "text-slate-500 text-sm italic", children: "Loading session data..." }))] })] })] })] }));
 }
