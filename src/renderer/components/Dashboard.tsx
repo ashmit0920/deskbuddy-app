@@ -70,105 +70,125 @@ export default function Dashboard() {
     }
 
     return (
-        <div className="space-y-6">
-            <header className="flex items-center justify-between">
+        <div className="space-y-8">
+            <header className="flex items-end justify-between border-b border-slate-800 pb-6">
                 <div>
-                    <h2 className="text-3xl font-bold">Dashboard</h2>
-                    <p className="text-slate-400">Overview of your focus and activity</p>
+                    <h2 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">Dashboard</h2>
+                    <p className="text-slate-400 mt-2">Overview of your focus and activity</p>
                 </div>
-                <div className="text-sm text-slate-400">
-                    Last synced: {new Date().toLocaleTimeString()}
+                <div className="text-sm text-slate-500 bg-slate-800/50 px-3 py-1 rounded-full border border-slate-700">
+                    Synced: {new Date().toLocaleTimeString()}
                 </div>
             </header>
 
             <motion.section
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.35 }}
-                className="grid grid-cols-1 md:grid-cols-4 gap-4"
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-1 md:grid-cols-4 gap-6"
             >
                 <MetricCard
                     title="Active Periods"
-                    value={<span className="text-indigo-300">{productivity?.active_periods || 0}</span>}
+                    value={productivity?.active_periods || 0}
                     note="Sessions"
+                    icon="Activity"
                 />
                 <MetricCard
                     title="Avg Attention"
-                    value={<span>{(productivity?.avg_attention || 0).toFixed(2)}</span>}
-                    note="Score (0-1)"
+                    value={(productivity?.avg_attention || 0).toFixed(2)}
+                    note="Score"
+                    icon="Repeat" // Using Repeat as a placeholder for Attention
                 />
                 <MetricCard
                     title="Blink Rate"
-                    value={<span>{(productivity?.avg_blink_rate || 0).toFixed(1)}</span>}
-                    note="Per minute"
+                    value={(productivity?.avg_blink_rate || 0).toFixed(1)}
+                    note="/ min"
+                    icon="Clock" // Eye icon would be better
                 />
                 <MetricCard
                     title="Typing Speed"
-                    value={<span>{(productivity?.avg_typing_speed || 0).toFixed(1)}</span>}
+                    value={(productivity?.avg_typing_speed || 0).toFixed(1)}
                     note="WPM"
+                    icon="Type"
+                    trend={productivity && productivity.avg_typing_speed > 40 ? "Good" : undefined}
                 />
             </motion.section>
 
-            <motion.section
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45 }}
-                className="grid grid-cols-1 lg:grid-cols-3 gap-6"
-            >
-                <div className="lg:col-span-2 space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <motion.div
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="lg:col-span-2 space-y-6"
+                >
                     <MetricCard
                         title="Typing Analysis"
-                        value={<span className="text-3xl">{productivity?.total_keystrokes.toLocaleString() || 0}</span>}
+                        value={productivity?.total_keystrokes.toLocaleString() || 0}
                         note="Total Keystrokes"
+                        icon="Type"
                     >
-                        <div className="mt-4">
+                        <div className="mt-6 h-64">
                             <TypingBarChart data={typingChartData} />
                         </div>
                     </MetricCard>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-6">
                         <MetricCard
                             title="Face Detection"
-                            value={<span>{((productivity?.face_detection_rate || 0) * 100).toFixed(1)}%</span>}
+                            value={`${((productivity?.face_detection_rate || 0) * 100).toFixed(0)}%`}
+                            icon="Activity"
+                            trend="Reliability"
                         />
                         <MetricCard
                             title="Active Time"
-                            value={<span>{((productivity?.active_periods || 0) * 5 / 60).toFixed(1)} hrs</span>}
-                            note="Est. based on sessions"
+                            value={`${((productivity?.active_periods || 0) * 5 / 60).toFixed(1)}h`}
+                            note="Estimated"
+                            icon="Clock"
                         />
                     </div>
-                </div>
+                </motion.div>
 
-                <div className="space-y-4">
+                <motion.div
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.3 }}
+                    className="space-y-6"
+                >
                     <MetricCard
                         title="Application Usage"
-                        value={<span className="text-3xl">{appUsage.length}</span>}
-                        note="Total Apps"
+                        value={appUsage.length}
+                        note="Active Apps"
+                        icon="Activity"
                     >
-                        <div className="mt-4">
+                        <div className="mt-6 h-48">
                             <TimePieChart data={appChartData} />
                         </div>
                     </MetricCard>
 
-                    <div className="bg-slate-800/60 border border-slate-700/40 rounded-2xl p-5 shadow-md">
-                        <h3 className="text-slate-300 text-sm mb-3">Top Applications</h3>
-                        <div className="space-y-2">
+                    <div className="bg-slate-800/40 backdrop-blur-md border border-slate-700/50 rounded-2xl p-6">
+                        <h3 className="text-slate-200 font-semibold mb-4 text-sm uppercase tracking-wider">Top Applications</h3>
+                        <div className="space-y-3">
                             {appChartData.map((app, idx) => (
-                                <div key={idx} className="flex justify-between text-sm">
-                                    <span className="text-slate-400">{app.name}</span>
-                                    <span className="text-slate-200">{(app.value / 60).toFixed(0)} min</span>
+                                <div key={idx} className="flex items-center justify-between group">
+                                    <div className="flex items-center gap-3">
+                                        <div className="w-6 h-6 rounded bg-slate-700/50 text-xs flex items-center justify-center text-slate-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-400 transition-colors">
+                                            {idx + 1}
+                                        </div>
+                                        <span className="text-slate-300 font-medium text-sm">{app.name}</span>
+                                    </div>
+                                    <span className="text-slate-400 text-sm font-mono bg-slate-900/40 px-2 py-0.5 rounded">
+                                        {(app.value / 60).toFixed(0)}m
+                                    </span>
                                 </div>
                             ))}
                         </div>
                     </div>
-                </div>
-            </motion.section>
+                </motion.div>
+            </div>
 
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
-                <div className="text-slate-400 text-sm">
-                    Data fetched from local DeskBuddy backend.
-                </div>
-            </motion.div>
+            <div className="text-center text-slate-600 text-xs pt-8">
+                DeskBuddy Analytics System • v1.0
+            </div>
         </div>
     );
 }

@@ -29,7 +29,6 @@ export const gemini = {
                     contents: contents,
                     generationConfig: {
                         temperature: 0.7,
-                        maxOutputTokens: 256,
                     }
                 }),
             });

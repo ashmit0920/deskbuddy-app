@@ -1,4 +1,4 @@
-import { KeystrokeLog, WindowActivity, AppUsageStats, AttentionData, ProductivityStats, SystemStatus } from "../types";
+import { KeystrokeLog, WindowActivity, AppUsageStats, AttentionData, ProductivityStats, SystemStatus, DailySummary, WeeklyTrends } from "../types";
 
 const BASE_URL = "http://localhost:8000/api";
 
@@ -44,6 +44,14 @@ export const api = {
             const params = new URLSearchParams();
             if (date) params.append("date", date);
             return fetchJson<ProductivityStats>(`/analytics/productivity/stats?${params.toString()}`);
+        },
+        getDailyAnalysis: (date: string) => {
+            return fetchJson<DailySummary>(`/analytics/daily/${date}`);
+        },
+        getWeeklyTrends: (endDate?: string) => {
+            const params = new URLSearchParams();
+            if (endDate) params.append("end_date", endDate);
+            return fetchJson<WeeklyTrends>(`/analytics/weekly?${params.toString()}`);
         },
     },
     system: {
