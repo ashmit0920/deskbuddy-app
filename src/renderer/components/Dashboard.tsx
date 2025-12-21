@@ -160,7 +160,7 @@ export default function Dashboard() {
                         note="Active Apps"
                         icon="Activity"
                     >
-                        <div className="mt-6 h-48">
+                        <div className="mt-6 h-64">
                             <TimePieChart data={appChartData} />
                         </div>
                     </MetricCard>

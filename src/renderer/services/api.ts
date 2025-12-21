@@ -1,4 +1,6 @@
 import { KeystrokeLog, WindowActivity, AppUsageStats, AttentionData, ProductivityStats, SystemStatus, DailySummary, WeeklyTrends } from "../types";
+import { mockApi } from "./mockApi";
+import { USE_MOCK_DATA } from "../config";
 
 const BASE_URL = "http://localhost:8000/api";
 
@@ -10,7 +12,7 @@ async function fetchJson<T>(endpoint: string): Promise<T> {
     return response.json();
 }
 
-export const api = {
+const realApi = {
     activity: {
         getKeystrokes: (startDate?: string, endDate?: string) => {
             const params = new URLSearchParams();
@@ -58,3 +60,5 @@ export const api = {
         getStatus: () => fetchJson<SystemStatus>("/system/status"),
     },
 };
+
+export const api = USE_MOCK_DATA ? mockApi : realApi;
