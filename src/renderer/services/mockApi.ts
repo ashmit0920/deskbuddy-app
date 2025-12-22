@@ -128,7 +128,6 @@ export const mockApi = {
                 insights: [
                     "🚀 High productivity detected in the morning session.",
                     "💡 You maintain better focus when using VS Code compared to Chrome.",
-                    "✅ Great job minimizing distractions today!",
                     "👀 Attention was highest between 10:00 AM and 11:30 AM."
                 ],
                 generated_at: new Date().toISOString()
@@ -146,7 +145,7 @@ export const mockApi = {
                 weekly_data: Array.from({ length: 7 }, (_, i) => ({
                     date: new Date(weekStart.getTime() + i * 86400000).toISOString().split('T')[0],
                     productivity_score: 75 + Math.random() * 20,
-                    total_keystrokes: 10000 + Math.random() * 8000,
+                    total_keystrokes: Math.floor(5000 + Math.random() * 4000),
                     active_time: 300 + Math.random() * 120,
                     avg_attention: 0.7 + Math.random() * 0.2,
                     focus_sessions: Math.floor(3 + Math.random() * 5)

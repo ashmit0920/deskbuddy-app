@@ -19,7 +19,7 @@ export default function Sidebar({
     ];
 
     return (
-        <aside className="w-64 bg-slate-900 border-r border-slate-800 p-6 flex flex-col gap-8 h-screen sticky top-0 text-slate-400">
+        <aside className="w-72 bg-slate-900 border-r border-slate-800 p-6 flex flex-col gap-8 h-screen sticky top-0 text-slate-400">
             <div className="flex items-center gap-4 px-2">
                 <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-lg font-bold shadow-lg shadow-indigo-500/20">DB</div>
                 <div>

@@ -31,7 +31,7 @@ export default function AnalyticsDaily() {
     return (
         <div className="space-y-8">
             <header>
-                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 to-cyan-400">
+                <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-slate-700 dark:bg-gradient-to-r dark:from-indigo-400 dark:to-cyan-400">
                     Daily Analysis
                 </h2>
                 <p className="text-slate-400 mt-2">Detailed breakdown for {data.date}</p>
