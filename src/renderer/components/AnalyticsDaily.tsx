@@ -45,7 +45,7 @@ export default function AnalyticsDaily() {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: idx * 0.1 }}
                         key={idx}
-                        className="bg-indigo-500/10 border border-indigo-500/20 text-indigo-200 px-4 py-2 rounded-full text-sm">
+                        className="bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-200 dark:border-indigo-500/20 text-indigo-700 dark:text-indigo-200 px-4 py-2 rounded-full text-sm font-medium">
                         {insight}
                     </motion.div>
                 ))}
@@ -80,47 +80,47 @@ export default function AnalyticsDaily() {
             </div>
 
             {/* Mouse Activity Section */}
-            <section className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm">
-                <h3 className="text-xl font-semibold mb-6 flex items-center gap-2">
-                    <span className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center text-pink-400">🖱️</span>
+            <section className="bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm shadow-sm dark:shadow-none">
+                <h3 className="text-xl font-semibold mb-6 flex items-center gap-2 text-slate-800 dark:text-slate-100">
+                    <span className="w-8 h-8 rounded-lg bg-pink-100 dark:bg-pink-500/20 flex items-center justify-center text-pink-500 dark:text-pink-400">🖱️</span>
                     Mouse Activity
                 </h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                     <div>
-                        <div className="text-sm text-slate-400 mb-1">Total Clicks</div>
-                        <div className="text-2xl font-mono text-pink-300">{data.mouse_summary.total_clicks}</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 mb-1">Total Clicks</div>
+                        <div className="text-2xl font-mono text-pink-500 dark:text-pink-300 font-bold">{data.mouse_summary.total_clicks}</div>
                     </div>
                     <div>
-                        <div className="text-sm text-slate-400 mb-1">Scroll Velocity</div>
-                        <div className="text-2xl font-mono text-cyan-300">{data.mouse_summary.avg_velocity_px_s.toFixed(0)} px/s</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 mb-1">Scroll Velocity</div>
+                        <div className="text-2xl font-mono text-cyan-600 dark:text-cyan-300 font-bold">{data.mouse_summary.avg_velocity_px_s.toFixed(0)} px/s</div>
                     </div>
                     <div>
-                        <div className="text-sm text-slate-400 mb-1">Movement</div>
-                        <div className="text-2xl font-mono text-emerald-300">{(data.mouse_summary.total_distance_px / 1000).toFixed(1)}k px</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 mb-1">Movement</div>
+                        <div className="text-2xl font-mono text-emerald-600 dark:text-emerald-300 font-bold">{(data.mouse_summary.total_distance_px / 1000).toFixed(1)}k px</div>
                     </div>
                     <div>
-                        <div className="text-sm text-slate-400 mb-1">Idle Ratio</div>
-                        <div className="text-2xl font-mono text-orange-300">{data.mouse_summary.idle_ratio_percent.toFixed(1)}%</div>
+                        <div className="text-sm text-slate-500 dark:text-slate-400 mb-1">Idle Ratio</div>
+                        <div className="text-2xl font-mono text-orange-500 dark:text-orange-300 font-bold">{data.mouse_summary.idle_ratio_percent.toFixed(1)}%</div>
                     </div>
                 </div>
             </section>
 
             {/* Application Usage */}
-            <section className="bg-slate-800/40 border border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm">
-                <h3 className="text-xl font-semibold mb-4">Application Usage Breakdown</h3>
+            <section className="bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700/50 rounded-2xl p-6 backdrop-blur-sm shadow-sm dark:shadow-none">
+                <h3 className="text-xl font-semibold mb-4 text-slate-800 dark:text-slate-100">Application Usage Breakdown</h3>
                 <div className="space-y-3">
                     {Object.entries(data.window_summary.app_usage)
                         .sort(([, a], [, b]) => b - a)
                         .slice(0, 5)
                         .map(([app, time], idx) => (
                             <div key={app} className="flex items-center gap-4">
-                                <div className="w-8 h-8 rounded bg-slate-700 text-xs flex items-center justify-center">{idx + 1}</div>
+                                <div className="w-8 h-8 rounded bg-slate-100 dark:bg-slate-700 text-xs flex items-center justify-center text-slate-500 dark:text-slate-300">{idx + 1}</div>
                                 <div className="flex-1">
                                     <div className="flex justify-between mb-1">
-                                        <span className="font-medium">{app}</span>
-                                        <span className="text-slate-400 text-sm">{time.toFixed(1)} min</span>
+                                        <span className="font-medium text-slate-700 dark:text-slate-200">{app}</span>
+                                        <span className="text-slate-500 dark:text-slate-400 text-sm">{time.toFixed(1)} min</span>
                                     </div>
-                                    <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+                                    <div className="h-2 bg-slate-200 dark:bg-slate-700/50 rounded-full overflow-hidden">
                                         <div
                                             className="h-full bg-indigo-500 rounded-full"
                                             style={{ width: `${(time / data.window_summary.total_time_minutes) * 100}%` }}

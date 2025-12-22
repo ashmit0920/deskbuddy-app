@@ -23,14 +23,31 @@ export default function TypingBarChart({ data = [] }: Props) {
         <div className="h-60">
             <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} margin={{ top: 10, right: 6, left: -12, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#0f172a" />
-                    <XAxis dataKey="hour" tick={{ fill: "#94a3b8" }} />
-                    <YAxis tick={{ fill: "#94a3b8" }} />
-                    <Tooltip
-                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }}
-                        itemStyle={{ color: '#e2e8f0' }}
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
+                    <XAxis
+                        dataKey="hour"
+                        stroke="var(--chart-text)"
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
                     />
-                    <Bar dataKey="keystrokes" radius={[6, 6, 6, 6]} fill="#60a5fa" />
+                    <YAxis
+                        stroke="var(--chart-text)"
+                        fontSize={12}
+                        tickLine={false}
+                        axisLine={false}
+                        tickFormatter={(value) => `${value}`}
+                    />
+                    <Tooltip
+                        contentStyle={{
+                            backgroundColor: 'var(--chart-tooltip-bg)',
+                            borderColor: 'var(--chart-tooltip-border)',
+                            borderRadius: '0.75rem',
+                            color: 'var(--chart-tooltip-text)'
+                        }}
+                        itemStyle={{ color: 'var(--chart-tooltip-text)' }}
+                        cursor={{ fill: 'var(--chart-cursor)', opacity: 0.6 }}
+                    /><Bar dataKey="keystrokes" radius={[6, 6, 6, 6]} fill="#60a5fa" />
                 </BarChart>
             </ResponsiveContainer>
         </div>

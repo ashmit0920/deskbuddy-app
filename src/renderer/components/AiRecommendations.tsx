@@ -75,7 +75,7 @@ export default function AiRecommendations() {
             </header>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div className="lg:col-span-2 bg-slate-800/60 border border-slate-700/40 rounded-2xl p-4 flex flex-col h-[600px]">
+                <div className="lg:col-span-2 bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/40 rounded-2xl p-4 flex flex-col h-[600px] shadow-sm dark:shadow-none">
                     <div ref={scrollRef} className="flex-1 overflow-auto space-y-4 px-2 pb-4" style={{ scrollbarWidth: 'thin', scrollbarColor: '#475569 transparent' }}>
                         {messages.map((m) => (
                             <motion.div
@@ -86,7 +86,7 @@ export default function AiRecommendations() {
                             >
                                 <div className={`max-w-[80%] p-4 rounded-2xl ${m.from === "user"
                                     ? "bg-indigo-600 text-white rounded-br-none"
-                                    : "bg-slate-700/80 text-slate-100 rounded-bl-none"
+                                    : "bg-slate-100 dark:bg-slate-700/80 text-slate-800 dark:text-slate-100 rounded-bl-none"
                                     }`}>
                                     <div className="text-sm leading-relaxed whitespace-pre-wrap">{m.text}</div>
                                 </div>
@@ -94,7 +94,7 @@ export default function AiRecommendations() {
                         ))}
                         {loading && (
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
-                                <div className="bg-slate-700/80 p-4 rounded-2xl rounded-bl-none flex gap-2">
+                                <div className="bg-slate-100 dark:bg-slate-700/80 p-4 rounded-2xl rounded-bl-none flex gap-2">
                                     <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce" />
                                     <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]" />
                                     <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]" />
@@ -103,7 +103,7 @@ export default function AiRecommendations() {
                         )}
                     </div>
 
-                    <div className="mt-4 pt-4 border-t border-slate-700/30">
+                    <div className="mt-4 pt-4 border-t border-slate-200 dark:border-slate-700/30">
                         <div className="flex gap-3">
                             <input
                                 value={text}
@@ -111,12 +111,12 @@ export default function AiRecommendations() {
                                 onKeyDown={(e) => e.key === "Enter" && send()}
                                 placeholder="Ask about your productivity, stress, or request tips..."
                                 disabled={loading}
-                                className="flex-1 rounded-xl bg-slate-900/50 border border-slate-700 px-4 py-3 focus:outline-none focus:border-indigo-500 transition-colors disabled:opacity-50"
+                                className="flex-1 rounded-xl bg-slate-50 dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 px-4 py-3 focus:outline-none focus:border-indigo-500 transition-colors disabled:opacity-50 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500"
                             />
                             <button
                                 onClick={send}
                                 disabled={loading || !text.trim()}
-                                className="rounded-xl bg-indigo-600 px-5 py-3 flex items-center gap-2 font-medium hover:bg-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="rounded-xl bg-indigo-600 px-5 py-3 flex items-center gap-2 font-medium text-white hover:bg-indigo-500 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             >
                                 <Plane className="w-5 h-5" />
                             </button>
@@ -125,14 +125,14 @@ export default function AiRecommendations() {
                 </div>
 
                 <aside className="space-y-4">
-                    <div className="bg-slate-800/60 border border-slate-700/40 rounded-2xl p-5">
-                        <h4 className="font-medium text-indigo-300 mb-4">Quick Actions</h4>
+                    <div className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/40 rounded-2xl p-5 shadow-sm dark:shadow-none">
+                        <h4 className="font-medium text-indigo-600 dark:text-indigo-300 mb-4">Quick Actions</h4>
                         <div className="space-y-2">
                             {["Analyze my focus session", "Give me a destress tip", "How is my typing rhythm?", "Suggest a break schedule"].map(suggestion => (
                                 <button
                                     key={suggestion}
                                     onClick={() => { setText(suggestion); }}
-                                    className="w-full text-left p-3 rounded-lg bg-slate-700/30 hover:bg-slate-700/50 text-sm text-slate-300 transition-colors border border-slate-700/30 hover:border-indigo-500/30"
+                                    className="w-full text-left p-3 rounded-lg bg-slate-50 dark:bg-slate-700/30 hover:bg-slate-100 dark:hover:bg-slate-700/50 text-sm text-slate-600 dark:text-slate-300 transition-colors border border-slate-200 dark:border-slate-700/30 hover:border-indigo-500/30"
                                 >
                                     {suggestion}
                                 </button>
@@ -140,29 +140,29 @@ export default function AiRecommendations() {
                         </div>
                     </div>
 
-                    <div className="bg-slate-800/60 border border-slate-700/40 rounded-2xl p-5">
-                        <h4 className="font-medium text-indigo-300 mb-3">Live Context</h4>
+                    <div className="bg-white dark:bg-slate-800/60 border border-slate-200 dark:border-slate-700/40 rounded-2xl p-5 shadow-sm dark:shadow-none">
+                        <h4 className="font-medium text-indigo-600 dark:text-indigo-300 mb-3">Live Context</h4>
                         {stats ? (
                             <div className="space-y-3 text-sm">
-                                <div className="flex justify-between pb-2 border-b border-slate-700/30">
-                                    <span className="text-slate-400">Typing Speed</span>
-                                    <span className="font-mono text-slate-200">{stats.avg_typing_speed.toFixed(1)} WPM</span>
+                                <div className="flex justify-between pb-2 border-b border-slate-100 dark:border-slate-700/30">
+                                    <span className="text-slate-500 dark:text-slate-400">Typing Speed</span>
+                                    <span className="font-mono text-slate-700 dark:text-slate-200">{stats.avg_typing_speed.toFixed(1)} WPM</span>
                                 </div>
-                                <div className="flex justify-between pb-2 border-b border-slate-700/30">
-                                    <span className="text-slate-400">Total Keystrokes</span>
-                                    <span className="font-mono text-slate-200">{stats.total_keystrokes.toLocaleString()}</span>
+                                <div className="flex justify-between pb-2 border-b border-slate-100 dark:border-slate-700/30">
+                                    <span className="text-slate-500 dark:text-slate-400">Total Keystrokes</span>
+                                    <span className="font-mono text-slate-700 dark:text-slate-200">{stats.total_keystrokes.toLocaleString()}</span>
                                 </div>
-                                <div className="flex justify-between pb-2 border-b border-slate-700/30">
-                                    <span className="text-slate-400">Attention</span>
-                                    <span className="font-mono text-slate-200">{(stats.avg_attention * 100).toFixed(0)}%</span>
+                                <div className="flex justify-between pb-2 border-b border-slate-100 dark:border-slate-700/30">
+                                    <span className="text-slate-500 dark:text-slate-400">Attention</span>
+                                    <span className="font-mono text-slate-700 dark:text-slate-200">{(stats.avg_attention * 100).toFixed(0)}%</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-slate-400">Sessions</span>
-                                    <span className="font-mono text-slate-200">{stats.active_periods}</span>
+                                    <span className="text-slate-500 dark:text-slate-400">Sessions</span>
+                                    <span className="font-mono text-slate-700 dark:text-slate-200">{stats.active_periods}</span>
                                 </div>
                             </div>
                         ) : (
-                            <div className="text-slate-500 text-sm italic">Loading session data...</div>
+                            <div className="text-slate-400 dark:text-slate-500 text-sm italic">Loading session data...</div>
                         )}
                     </div>
                 </aside>

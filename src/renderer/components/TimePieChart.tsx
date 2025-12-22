@@ -23,16 +23,27 @@ export default function TimePieChart({ data = [] }: Props) {
                         nameKey="name"
                         cx="50%"
                         cy="50%"
+                        innerRadius={60}
                         outerRadius={80}
-                        label={({ name, percent }) => `${name} ${((percent || 0) * 100).toFixed(0)}%`}
+                        paddingAngle={5}
                     >
-                        {data.map((_, idx) => (
-                            <Cell key={`cell-${idx}`} fill={COLORS[idx % COLORS.length]} />
+                        {data.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} strokeWidth={0} />
                         ))}
                     </Pie>
                     <Tooltip
-                        contentStyle={{ backgroundColor: '#1e293b', borderColor: '#334155' }}
-                        itemStyle={{ color: '#e2e8f0' }}
+                        contentStyle={{
+                            backgroundColor: 'var(--chart-tooltip-bg)',
+                            borderColor: 'var(--chart-tooltip-border)',
+                            borderRadius: '0.75rem',
+                            color: 'var(--chart-tooltip-text)'
+                        }}
+                        itemStyle={{ color: 'var(--chart-tooltip-text)' }}
+                        formatter={(value: number, name: string) => {
+                            const total = data.reduce((acc, curr) => acc + curr.value, 0);
+                            const percent = ((value / total) * 100).toFixed(1);
+                            return [`${(value / 60).toFixed(0)}m (${percent}%)`, name];
+                        }}
                     />
                     <Legend verticalAlign="top" align="center" height={36} />
                 </PieChart>
