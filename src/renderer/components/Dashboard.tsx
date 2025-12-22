@@ -220,10 +220,10 @@ export default function Dashboard() {
                                 <div>
                                     <div className="flex justify-between text-xs mb-2">
                                         <span className="text-slate-600 dark:text-slate-300">Stress Indicator</span>
-                                        <span className="text-slate-800 dark:text-slate-200 font-medium">0.61</span>
+                                        <span className="text-slate-800 dark:text-slate-200 font-medium">0.21</span>
                                     </div>
                                     <div className="h-2 w-full bg-slate-100 dark:bg-slate-700 rounded-full overflow-hidden">
-                                        <div className="h-full bg-gradient-to-r from-rose-400 to-amber-400 rounded-full" style={{ width: '61%' }}></div>
+                                        <div className="h-full bg-gradient-to-r from-rose-400 to-amber-400 rounded-full" style={{ width: '21%' }}></div>
                                     </div>
                                 </div>
                             </div>
