@@ -6,14 +6,42 @@ export const mockApi = {
     activity: {
         getKeystrokes: async (startDate?: string, endDate?: string): Promise<KeystrokeLog[]> => {
             await delay(500);
-            return Array.from({ length: 150 }, (_, i) => ({
-                id: i,
-                timestamp: new Date(Date.now() - i * 60000).toISOString(),
-                typing_speed: Math.floor(Math.random() * 60) + 30, // 30-90 WPM
-                key_count: Math.floor(Math.random() * 200) + 50,
-                active_window: i % 3 === 0 ? "VS Code" : i % 3 === 1 ? "Chrome" : "Cursor",
-                is_active: Math.random() > 0.1
-            }));
+
+            // Start from 5:00 PM today
+            const startTime = new Date();
+            startTime.setHours(17, 0, 0, 0);
+
+            return Array.from({ length: 350 }, (_, i) => {
+                // Realistic variation: High activity first hour, drop (break), then resume
+                let minKeys = 30;
+                let maxKeys = 150;
+
+                // Simulate break betweeen 60m and 90m (6:00 PM - 6:30 PM)
+                if (i > 60 && i < 90) {
+                    minKeys = 0;
+                    maxKeys = 15; // User went for dinner/break
+                }
+                // Ramp up period
+                else if (i >= 90 && i < 110) {
+                    minKeys = 20;
+                    maxKeys = 80;
+                }
+
+                // Add "flow state" bursts
+                const isFlowState = i % 45 > 30; // Every 45 mins, 15 mins of high intensity
+                if (isFlowState && i < 60) maxKeys += 50;
+
+                const count = Math.floor(Math.random() * (maxKeys - minKeys)) + minKeys;
+
+                return {
+                    id: i,
+                    timestamp: new Date(startTime.getTime() + i * 60000).toISOString(),
+                    typing_speed: count > 10 ? Math.floor(Math.random() * 40) + 50 : 0,
+                    key_count: Math.max(0, count),
+                    active_window: i % 3 === 0 ? "VS Code" : i % 3 === 1 ? "Chrome" : "Cursor",
+                    is_active: count > 5
+                };
+            });
         },
         getWindows: async (startDate?: string, endDate?: string): Promise<WindowActivity[]> => {
             await delay(500);
