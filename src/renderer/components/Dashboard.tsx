@@ -180,7 +180,7 @@ export default function Dashboard() {
                         <div className="flex items-center justify-between mb-6">
                             <h3 className="font-semibold text-slate-800 dark:text-slate-100 flex items-center gap-2">
                                 <Cpu className="w-4 h-4 text-purple-500" />
-                                Live Inference
+                                Behavioural Score
                             </h3>
                             <div className="flex items-center gap-1.5 px-2 py-1 bg-purple-500/10 rounded-full border border-purple-500/20">
                                 <span className="relative flex h-2 w-2">
