@@ -104,12 +104,12 @@ export default function AnalyticsWeekly() {
                             <BarChart2 className="w-4 h-4" /> {data.trends.productivity}
                         </span>
                     </div>
-                    <div className="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-lg">
+                    {/* <div className="bg-slate-100 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-lg">
                         <span className="text-slate-500 text-xs uppercase tracking-wider block mb-1">Most Active Day</span>
                         <span className="text-lg font-semibold capitalize text-indigo-500 flex items-center gap-2">
                             <Clock className="w-4 h-4" /> {data.trends.most_active_day}
                         </span>
-                    </div>
+                    </div> */}
                 </div>
             </header>
 
